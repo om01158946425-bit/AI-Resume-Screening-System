@@ -1,0 +1,523 @@
+{
+  "name": "AI Resume Screening System",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -528,
+        -432
+      ],
+      "id": "c22d3ec6-6d08-45a0-8be1-881ac7cf6c09",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an expert HR recruiter.\n\nAnalyze the following CV and extract the candidate information.\n\nReturn ONLY a valid JSON object.\n\nUse this exact schema:\n\n{\n  \"full_name\": \"\",\n  \"email\": \"\",\n  \"phone\": \"\",\n  \"skills\": [],\n  \"years_of_experience\": 0,\n  \"education\": \"\",\n  \"certifications\": [],\n  \"score\": 0\n}\n\nScoring Rules:\n- Skills: 40 points\n- Experience: 35 points\n- Education: 15 points\n- Certifications: 10 points\n\nRules:\n- Return ONLY raw JSON.\n- Do NOT use markdown.\n- Do NOT use ```json.\n- Do NOT add explanations or comments.\n- If a field is missing, return an empty string \"\" or an empty array [].\n- \"score\" must be an integer between 0 and 100.\n\nCV:\n{{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -288,
+        -512
+      ],
+      "id": "cac01ece-f84d-4c63-bee4-271de0c35252",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -336,
+        -224
+      ],
+      "id": "3bdc29bd-6966-4a7c-9a2c-864e986f2eef",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KV7iQPHuEqi7gXJZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1J0hEjxCFyX41UNZdYf9r3ixnHIlhkGE3-CFcm1SNiA0",
+          "mode": "list",
+          "cachedResultName": "AI Resume Screening Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1J0hEjxCFyX41UNZdYf9r3ixnHIlhkGE3-CFcm1SNiA0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1J0hEjxCFyX41UNZdYf9r3ixnHIlhkGE3-CFcm1SNiA0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.full_name }}",
+            "Email": "={{ $json.email }}",
+            "Phone": "={{ $json.phone }}",
+            "Skills": "={{ $json.skills }}",
+            "Score": "={{ $json.score }}",
+            "Certifications": "={{ $json.certifications }}",
+            "Education": "={{ $json.education }}",
+            "Experience": "={{ $json.years_of_experience }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Education",
+              "displayName": "Education",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Certifications",
+              "displayName": "Certifications",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        -208
+      ],
+      "id": "cbbb3098-5ab9-4d35-b536-02e7796e85fb",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "yV08VMuNlVgpvB2g",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.output;\n\nreturn [\n  {\n    json: JSON.parse(text)\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        -432
+      ],
+      "id": "1e28e259-986c-44a2-b6ff-a755dfd4fff4",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1J0hEjxCFyX41UNZdYf9r3ixnHIlhkGE3-CFcm1SNiA0",
+          "mode": "list",
+          "cachedResultName": "AI Resume Screening Results",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1J0hEjxCFyX41UNZdYf9r3ixnHIlhkGE3-CFcm1SNiA0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1J0hEjxCFyX41UNZdYf9r3ixnHIlhkGE3-CFcm1SNiA0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        608,
+        -512
+      ],
+      "id": "1f1e897e-7ff2-4990-a862-e06e7541c7d5",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "yV08VMuNlVgpvB2g",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "Score",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -336
+      ],
+      "id": "290da0fa-d13a-45b4-99be-0f5d17ce069c",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        -336
+      ],
+      "id": "8c01b5ae-e804-4cff-9502-9c40c337acee",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "chatId": "8497125697",
+        "text": "=🏆 Top Candidate\n\n👤 Name:  {{ $json.Name }}\n\n⭐ Score: {{ $json.Score }}\n\n📧 Email: {{ $json.Email }}\n\n📞 Phone: {{ $json.Phone }}\n\n🛠 Skills:\n{{ $json.Skills }}\n\n🎓 Education:\n{{ $json.Education }}\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1264,
+        -336
+      ],
+      "id": "d76d2178-5a31-46f3-8010-82bb75086206",
+      "name": "Send a text message",
+      "webhookId": "b7abeb03-fbac-44eb-98c9-2af171eaf891",
+      "credentials": {
+        "telegramApi": {
+          "id": "ECTfkL3VRMYOC2F6",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1456,
+        -288
+      ],
+      "id": "410c72a4-915e-4aca-8eec-22c3c825082d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -912,
+        -736
+      ],
+      "id": "b6a632cc-218a-43d8-8393-70caa2a95663",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "trashed = false and mimeType != 'application/vnd.google-apps.folder'",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "190BGdGSy566__bzvYAu395t_oMKdd1Cm",
+            "mode": "list",
+            "cachedResultName": "cvs",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/190BGdGSy566__bzvYAu395t_oMKdd1Cm"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1216,
+        -304
+      ],
+      "id": "4aba58b1-464c-4d7f-9e29-3028824413d5",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xlMy15exBrDGz96y",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -752,
+        -416
+      ],
+      "id": "35b67666-7766-46e4-ae86-0cfb877f9bdc",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "xlMy15exBrDGz96y",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3b11a43e-36a8-4b36-bee3-fa81a92b909d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3fc4129fbcfd420e1811e93408658cd299ad81573e0a631cfc0d600cff7a68d4"
+  },
+  "id": "w0QQCzVQSLBCMrOh",
+  "tags": []
+}
