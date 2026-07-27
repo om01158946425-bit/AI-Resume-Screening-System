@@ -6,24 +6,6 @@ The system automatically scans PDF resumes from a Google Drive folder, extracts 
 
 ---
 
-# 📸 Demo
-
-## n8n Workflow
-
-> Add your workflow screenshot here.
-
-![Workflow]("screenshots/workflow.png")
-
----
-
-## Google Sheets Results
-
-> Add your Google Sheets screenshot here.
-
-![Google Sheets](screenshots/google-sheets.png)
-
----
-
 ## Telegram Notification
 
 > Add your Telegram Bot screenshot here.
