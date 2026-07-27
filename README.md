@@ -12,7 +12,7 @@ The system automatically scans PDF resumes from a Google Drive folder, extracts 
 
 > Add your workflow screenshot here.
 
-![Workflow](screenshots/workflow.png)
+![Workflow]("D:\AI Resume Screening System\workflow.png.png")
 
 ---
 
