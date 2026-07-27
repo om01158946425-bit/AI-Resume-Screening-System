@@ -6,14 +6,6 @@ The system automatically scans PDF resumes from a Google Drive folder, extracts 
 
 ---
 
-## Telegram Notification
-
-> Add your Telegram Bot screenshot here.
-
-![Telegram](screenshots/telegram.png)
-
----
-
 # 🚀 Features
 
 - 📂 Automatically scans all PDF resumes from a Google Drive folder
